@@ -25,8 +25,9 @@ var app={
     }
 
     function create() {
-      scoreText = game.add.text(16, 16, puntuacion, { fontSize: '100px', fill: '#757676' });
-      
+    	game.time.events.add(Phaser.Timer.SECOND*20, nada, this);
+      scoreText = game.add.text(ancho-120, 16, puntuacion, { fontSize: '50px', fill: '#757676' });
+     
       objetivo = game.add.sprite(app.inicioX(), app.inicioY(), 'objetivo');
 			objetivo2 = game.add.sprite(app.inicioX(), app.inicioY(), 'objetivo2');
       bola = game.add.sprite(app.inicioX(), app.inicioY(), 'bola');
@@ -38,7 +39,18 @@ var app={
       bola.body.onWorldBounds = new Phaser.Signal();
       bola.body.onWorldBounds.add(app.decrementaPuntuacion, this);
     }
-
+    function render() {
+    game.debug.text("Tiempo: " + Math.round(game.time.events.duration/1000), 32, 32);
+ 	}
+    function nada(){
+    	if(game.time.events.duration==0){
+    	  alert('Game over');
+    	  linea='Puntuacion: '+puntuacion+' puntos<br><button type="button" onclick="empieza()">Empezar</button>';
+        document.getElementById('tablon').innerHTML=linea;
+    	//	document.getElementById('tablon').innerHTML='Tu puntuación es de:'+puntuación+ 
+    		'';
+    		}
+    	}
     function update(){
     	var colores = [ "#f47c0b","#f48c0b","#f49c0b","#f4ac0b","#f4bc0b","#f4cc0b","#f4dc0b","#f4ec0b","#f4fc0b","#f4ff0b"]; 
       var factorDificultad = (300 + (dificultad * 100));
@@ -54,7 +66,7 @@ var app={
  					}
     }
 
-    var estados = { preload: preload, create: create, update: update };
+    var estados = { preload: preload, create: create, update: update,render: render  };
     var game = new Phaser.Game(ancho, alto, Phaser.CANVAS, 'phaser',estados);
   },
 
@@ -65,7 +77,7 @@ var app={
   },
 
   incrementaPuntuacion: function(){
-    puntuacion = puntuacion+1;
+    puntuacion = puntuacion+5;
     scoreText.text = puntuacion;
 
     objetivo.body.x = app.inicioX();
@@ -133,8 +145,10 @@ var app={
 
 };
 
+function empieza(){
+	document.getElementById('tablon').innerHTML='';
 if ('addEventListener' in document) {
     document.addEventListener('deviceready', function() {
         app.inicio();
     }, false);
-}
+}}
